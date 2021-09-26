@@ -12,7 +12,17 @@ const SearchForm = ({ setSongResults } : { setSongResults:any }) => {
 
     const lyricsSearchRes = searchLyrics(searchText);
     console.log('lyrics result', lyricsSearchRes);
-    setSongResults(lyricsSearchRes.track_list);
+
+    const uniqueTracks = lyricsSearchRes.track_list.reduce((res:any[], item) => {
+      const isDuplicate = res.some((x) => x.album_name === item.track.album_name
+        && x.artist_name === item.track.artist_name);
+      if (isDuplicate) { return res; }
+      return res.concat(item.track);
+    }, []);
+
+    console.log('unique tracks', uniqueTracks);
+    setSongResults(uniqueTracks);
+    // setSongResults(lyricsSearchRes.track_list);
   };
 
   return (
@@ -39,7 +49,7 @@ const SearchResults = ({ songResults } : { songResults:any }) => {
 
   return (
     <div>
-      {songResults.map(({ track } : any) => (
+      {songResults.map((track:any) => (
         <div key={track.track_id} style={{ marginBottom: '.5rem' }}>
           <div>{track.track_name}</div>
           <div>
