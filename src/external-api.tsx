@@ -1,5 +1,21 @@
+import axios from 'axios';
+import { albumResults, albumArtResults } from './music-brainsz-response-dummy';
+
 /* eslint-disable linebreak-style */
-export const searchLyrics = (lyrics: string) => {
+export const searchLyrics = (lyrics: string) : any => {
+  const page = 1;
+  const apiKey = process.env.REACT_APP_MUSIXMATCH_API_KEY;
+  const baseURL = 'https://api.musixmatch.com/ws/1.1/track.search';
+  const url = `${baseURL}?page=${page}&apikey=${apiKey}&q_lyrics=${lyrics}`;
+  const config = {
+    headers: { 'Access-Control-Allow-Origin': '*' },
+  };
+  console.log('music match url', url);
+  // return axios.get(url).then((res) => {
+  //   const { data } = res;
+  //   return data.message.body;
+  // });
+
   const dummyResponse = {
     message: {
       header: { status_code: 200, execute_time: 0.035959959030151, available: 10000 },
@@ -71,6 +87,23 @@ export const searchLyrics = (lyrics: string) => {
     },
   };
   return dummyResponse.message.body;
+};
+
+export const searchAlbums = async (title:string, artist:string) => {
+  const limit = 5;
+  const primaryType = 'album';
+  let baseUrl = 'https://musicbrainz.org/ws/2/release';
+  baseUrl = `${baseUrl}?query=release:"${title}" AND artist:"${artist}" AND primarytype:"${primaryType}"&limit=${limit}`;
+
+  console.log('album search url', baseUrl);
+  // return albumResults;
+  return axios.get(baseUrl).then((res) => res.data);
+};
+
+export const searchAlbumArt = async (albumID:string) => {
+  const url = `http://coverartarchive.org/release/${albumID}`;
+  // return albumArtResults;
+  return axios.get(url).then((res) => res.data);
 };
 
 export default {};
