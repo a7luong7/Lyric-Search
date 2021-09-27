@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { searchLyrics, searchAlbums, searchAlbumArt } from './external-api';
+import { searchLyrics, searchAlbums } from './external-api';
 
 const SearchForm = ({ setSongResults }: { setSongResults: any }) => {
   const [searchText, setSearchText] = useState('');
@@ -10,7 +10,7 @@ const SearchForm = ({ setSongResults }: { setSongResults: any }) => {
 
     console.log(searchText);
 
-    const lyricsSearchRes = searchLyrics(searchText);
+    const lyricsSearchRes = await searchLyrics(searchText);
     console.log('lyrics result', lyricsSearchRes);
 
     const uniqueTracks = lyricsSearchRes.track_list.reduce((res: any[], item:any) => {
@@ -63,15 +63,13 @@ const Song = ({ track }: { track: any }) => {
 
   useEffect(() => {
     async function getAlbum() {
-      const albums = await searchAlbums(track.album_name, track.artist_name);
-      if (albums.count === 0) { return; }
-      const albumID = albums.releases[0].id;
-      console.log('album id', albumID);
-      const albumArts = await searchAlbumArt(albumID);
-      if (!albumArts || albumArts.images.length === 0) { return; }
-      console.log('almbum arts', albumArts.images);
+      const album = await searchAlbums(track.album_name, track.artist_name);
+      console.log('albums', album);
 
-      setImgUrl(albumArts.images[0].thumbnails.small);
+      if (Object.keys(album).length === 0
+      || !album.album_coverart) { return; }
+
+      setImgUrl(album.album_coverart);
     }
     getAlbum();
   }, []);
@@ -104,7 +102,6 @@ const Song = ({ track }: { track: any }) => {
 
 const App = () => {
   const [songResults, setSongResults] = useState([]);
-  console.log('api key', process.env.REACT_APP_MUSIXMATCH_API_KEY);
   return (
     <div className="App">
       <SearchForm setSongResults={setSongResults} />
