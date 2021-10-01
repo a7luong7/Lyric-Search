@@ -9,17 +9,4 @@ export const searchLyrics = (lyrics: string) : Promise<Song[]> => {
   return axios.get(url).then((res) => res.data);
 };
 
-// export const searchAlbums = async (title:string, artist:string) => {
-//   const url =
-//   `${baseUrl}/albums/search?artist=${encodeURI(artist)}&albumTitle=${encodeURI(title)}`;
-//   console.log('album search url', url);
-//   return axios.get(url).then((res) => res.data);
-// };
-
-// export const searchAlbumArt = async (albumID:string) => {
-//   const url = `http://coverartarchive.org/release/${albumID}`;
-//   return albumArtResults;
-//   // return axios.get(url).then((res) => res.data);
-// };
-
 export default {};
