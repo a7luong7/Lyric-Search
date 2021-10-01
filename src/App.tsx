@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+/* eslint-disable linebreak-style */
 import React, { useEffect, useState } from 'react';
-import './App.css';
-import { searchLyrics, searchAlbums } from './external-api';
+import { Song } from './types';
+import { searchLyrics } from './external-api';
 
 const SearchForm = ({ setSongResults }: { setSongResults: any }) => {
   const [searchText, setSearchText] = useState('');
@@ -8,20 +11,18 @@ const SearchForm = ({ setSongResults }: { setSongResults: any }) => {
     e.preventDefault();
     if (!searchText) { return; }
 
-    console.log(searchText);
-
     const lyricsSearchRes = await searchLyrics(searchText);
-    console.log('lyrics result', lyricsSearchRes);
+    // console.log('lyrics result', lyricsSearchRes);
 
-    const uniqueTracks = lyricsSearchRes.track_list.reduce((res: any[], item:any) => {
-      const isDuplicate = res.some((x) => x.album_name === item.track.album_name
-        && x.artist_name === item.track.artist_name);
-      if (isDuplicate) { return res; }
-      return res.concat(item.track);
-    }, []);
+    // const uniqueTracks = lyricsSearchRes.reduce((res: any[], item:any) => {
+    //   const isDuplicate = res.some((x) => x.album_name === item.album_name
+    //     && x.artist_name === item.artist_name);
+    //   if (isDuplicate) { return res; }
+    //   return res.concat(item);
+    // }, []);
 
-    console.log('unique tracks', uniqueTracks);
-    setSongResults(uniqueTracks);
+    // console.log('unique tracks', uniqueTracks);
+    setSongResults(lyricsSearchRes);
     // setSongResults(lyricsSearchRes.track_list);
   };
 
@@ -42,37 +43,40 @@ const SearchForm = ({ setSongResults }: { setSongResults: any }) => {
   );
 };
 
-const SearchResults = ({ songResults }: { songResults: any }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+const SearchResults = ({ songs }: { songs: Song[] }) => {
   const placeholders = [];
-  if (songResults.length === 0) { return (<div>No songs found</div>); }
-
-  // const searchAlbumsCall = async () => {
-  //   const
-  // };
+  if (songs.length === 0) { return (<div>No songs found</div>); }
 
   return (
     <div>
-      {songResults.map((track: any) => <Song key={track.track_id} track={track} />)}
+      {songs.map((song) => <SongItem key={song.id} song={song} />)}
     </div>
   );
 };
 
-const Song = ({ track }: { track: any }) => {
+const SongItem = ({ song }: { song: Song }) => {
   const [imgUrl, setImgUrl] = useState('');
 
   useEffect(() => {
-    async function getAlbum() {
-      const album = await searchAlbums(track.album_name, track.artist_name);
-      console.log('albums', album);
-
-      if (Object.keys(album).length === 0
-      || !album.album_coverart) { return; }
-
-      setImgUrl(album.album_coverart);
+    if (song.song_art_image_thumbnail_url) {
+      setImgUrl(song.song_art_image_thumbnail_url);
+    } else if (song.header_image_thumbnail_url) {
+      setImgUrl(song.header_image_thumbnail_url);
     }
-    getAlbum();
   }, []);
+
+  // useEffect(() => {
+  //   async function getAlbum() {
+  //     const album = await searchAlbums(track.album_name, track.artist_name);
+  //     console.log('albums', album);
+
+  //     if (Object.keys(album).length === 0
+  //     || !album.album_coverart) { return; }
+
+  //     setImgUrl(album.album_coverart);
+  //   }
+  //   getAlbum();
+  // }, []);
 
   const imgStyle = {
     maxHeight: '100px',
@@ -82,30 +86,28 @@ const Song = ({ track }: { track: any }) => {
     border: 'solid gray 1px',
   };
   return (
-    <div key={track.track_id} style={{ marginBottom: '.5rem' }}>
+    <div style={{ marginBottom: '.5rem' }}>
       <div style={imgStyle}>
         {imgUrl
           ? <img style={imgStyle} src={imgUrl} alt="Album art" />
           : <div>Loading...</div>}
       </div>
-      <div>{track.track_name}</div>
+      <div>{song.title}</div>
       <div>
-        {track.artist_name}
+        by
         {' '}
-        -
-        {' '}
-        {track.album_name}
+        {song.artist}
       </div>
     </div>
   );
 };
 
 const App = () => {
-  const [songResults, setSongResults] = useState([]);
+  const [songResults, setSongResults] = useState<Song[]>([]);
   return (
     <div className="App">
       <SearchForm setSongResults={setSongResults} />
-      <SearchResults songResults={songResults} />
+      <SearchResults songs={songResults} />
     </div>
   );
 };
