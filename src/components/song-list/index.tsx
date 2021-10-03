@@ -27,25 +27,25 @@ const SongItem = ({ song, handleClick } : {
     border: 'solid gray 1px',
   };
   return (
-    <S.Song
+    <S.SongItem
       onClick={handleClick}
       onKeyDown={handleClick}
       role="menuitem"
       tabIndex={0}
       style={{ marginBottom: '.5rem' }}
     >
-      <div style={imgStyle}>
+      <S.SongItemImgWrapper>
         {imgUrl
-          ? <img style={imgStyle} src={imgUrl} alt="Album art" />
+          ? <S.SongItemImg src={imgUrl} alt="Album art" />
           : <div>Loading...</div>}
-      </div>
+      </S.SongItemImgWrapper>
       <div>{song.title}</div>
       <div>
         by
         {' '}
         {song.artist}
       </div>
-    </S.Song>
+    </S.SongItem>
   );
 };
 
