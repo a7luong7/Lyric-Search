@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Song } from '../../types';
 import { searchLyrics } from '../../external-api';
+import * as S from './styles';
 
 const SongItem = ({ song, handleClick } : {
   song: Song,
@@ -26,7 +27,7 @@ const SongItem = ({ song, handleClick } : {
     border: 'solid gray 1px',
   };
   return (
-    <div
+    <S.Song
       onClick={handleClick}
       onKeyDown={handleClick}
       role="menuitem"
@@ -44,7 +45,7 @@ const SongItem = ({ song, handleClick } : {
         {' '}
         {song.artist}
       </div>
-    </div>
+    </S.Song>
   );
 };
 

@@ -5,6 +5,7 @@
 import React, { useEffect, useState } from 'react';
 import { Song } from '../../types';
 import { searchLyrics } from '../../external-api';
+import * as S from './styles';
 
 const SongInfo = ({ song } : { song:Song }) => {
   const imgStyle = {
