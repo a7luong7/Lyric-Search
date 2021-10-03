@@ -13,7 +13,7 @@ const SearchForm = ({ searchTerm, setSearchTerm, setSongResults } : {
     e.preventDefault();
     if (!searchTerm) { return; }
     const lyricsSearchRes = await searchSongs(searchTerm);
-    setSongResults(lyricsSearchRes);
+    setSongResults(lyricsSearchRes.songs || []);
   };
 
   return (

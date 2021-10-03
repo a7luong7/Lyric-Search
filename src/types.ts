@@ -14,6 +14,25 @@ export interface Song {
   header_image_thumbnail_url?: string,
 }
 
+export interface LyricsHighlight {
+  property: string,
+  value: string,
+  snippet: boolean,
+  ranges: [{
+    start: number,
+    end: number
+  }]
+}
+
+export interface SongWithLyricsHighlight extends Song{
+  highlights?: LyricsHighlight[]
+}
+
+export interface SongSearchResponse {
+  songs: SongWithLyricsHighlight[],
+  nextPage: number | null
+}
+
 export interface LyricsRes {
   lyrics: string
 }
