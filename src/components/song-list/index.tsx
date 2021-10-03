@@ -39,11 +39,9 @@ const SongItem = ({ song, handleClick } : {
           ? <S.SongItemImg src={imgUrl} alt="Album art" />
           : <div>Loading...</div>}
       </S.SongItemImgWrapper>
-      <div>{song.title}</div>
       <div>
-        by
-        {' '}
-        {song.artist}
+        <S.SongTitle>{song.title}</S.SongTitle>
+        <S.SongArtist>{song.artist}</S.SongArtist>
       </div>
     </S.SongItem>
   );

@@ -23,6 +23,15 @@ export const SongItemImgWrapper = styled.div`
     border-radius:0.25rem;
     border: solid #eee 1px;
     overflow:hidden;
+    margin-right:0.25rem;
+`;
+
+export const SongTitle = styled.div`
+    font-size:1.15em;
+    font-weight:500
+`;
+export const SongArtist = styled.div`
+    color: #6c757d
 `;
 
 export default {};
