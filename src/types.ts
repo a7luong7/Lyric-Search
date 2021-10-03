@@ -13,3 +13,7 @@ export interface Song {
   header_image_url?: string,
   header_image_thumbnail_url?: string,
 }
+
+export interface LyricsRes {
+  lyrics: string
+}

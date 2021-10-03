@@ -4,7 +4,10 @@ import React, { useEffect, useState } from 'react';
 import { Song } from '../../types';
 import { searchLyrics } from '../../external-api';
 
-const SongItem = ({ song }: { song: Song }) => {
+const SongItem = ({ song, handleClick } : {
+  song: Song,
+  handleClick: () =>void
+}) => {
   const [imgUrl, setImgUrl] = useState('');
 
   useEffect(() => {
@@ -23,7 +26,13 @@ const SongItem = ({ song }: { song: Song }) => {
     border: 'solid gray 1px',
   };
   return (
-    <div style={{ marginBottom: '.5rem' }}>
+    <div
+      onClick={handleClick}
+      onKeyDown={handleClick}
+      role="menuitem"
+      tabIndex={0}
+      style={{ marginBottom: '.5rem' }}
+    >
       <div style={imgStyle}>
         {imgUrl
           ? <img style={imgStyle} src={imgUrl} alt="Album art" />
@@ -39,13 +48,22 @@ const SongItem = ({ song }: { song: Song }) => {
   );
 };
 
-const SongList = ({ songs }: { songs: Song[] }) => {
+const SongList = ({ songs, setCurrentSong }: {
+  songs: Song[],
+  setCurrentSong: (song:Song) => void
+}) => {
   const placeholders = [];
   if (songs.length === 0) { return (<div>No songs found</div>); }
 
   return (
     <div>
-      {songs.map((song) => <SongItem key={song.id} song={song} />)}
+      {songs.map((song) => (
+        <SongItem
+          key={song.id}
+          song={song}
+          handleClick={() => setCurrentSong(song)}
+        />
+      ))}
     </div>
   );
 };

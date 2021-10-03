@@ -2,17 +2,17 @@
 /* eslint-disable linebreak-style */
 import React, { useEffect, useState } from 'react';
 import { Song } from '../../types';
-import { searchLyrics } from '../../external-api';
+import { searchSongs } from '../../external-api';
 
-const SearchForm = ({ setSongResults } : {
+const SearchForm = ({ searchTerm, setSearchTerm, setSongResults } : {
+  searchTerm: string,
+  setSearchTerm: (st:string) => void,
   setSongResults: (songs:Song[]) => void
 }) => {
-  const [searchText, setSearchText] = useState('');
-
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    if (!searchText) { return; }
-    const lyricsSearchRes = await searchLyrics(searchText);
+    if (!searchTerm) { return; }
+    const lyricsSearchRes = await searchSongs(searchTerm);
     setSongResults(lyricsSearchRes);
   };
 
@@ -20,11 +20,11 @@ const SearchForm = ({ setSongResults } : {
     <form onSubmit={handleSubmit}>
       <input
         type="text"
-        value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
       />
       <button
-        disabled={!searchText}
+        disabled={!searchTerm}
         type="submit"
       >
         Search
