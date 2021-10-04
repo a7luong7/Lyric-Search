@@ -1,12 +1,30 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable linebreak-style */
-import React, { useEffect, useState } from 'react';
-import { Song } from '../../types';
-import { searchLyrics } from '../../external-api';
+import React, { useEffect, useState, useContext } from 'react';
+import { Song, SongWithLyricsHighlight, LyricsHighlight } from '../../types';
 import * as S from './styles';
+import SongsContext from '../../contexts';
+
+const SongLyricHighlight = ({ highlights } : { highlights: LyricsHighlight[] }) => {
+  const highlight = highlights.find((x) => x.property === 'lyrics');
+  if (!highlight) { return null; }
+
+  let highlightsStr = highlight.value;
+  highlight.ranges.reverse().forEach((range) => {
+    highlightsStr = `${highlightsStr.slice(0, range.end)}</b>${highlightsStr.slice(range.end)}`;
+    highlightsStr = `${highlightsStr.slice(0, range.start)}<b>${highlightsStr.slice(range.start)}`;
+  });
+  return (
+    // eslint-disable-next-line react/no-danger
+    <div dangerouslySetInnerHTML={{
+      __html: highlightsStr,
+    }}
+    />
+  );
+};
 
 const SongItem = ({ song, handleClick } : {
-  song: Song,
+  song: SongWithLyricsHighlight,
   handleClick: () =>void
 }) => {
   const [imgUrl, setImgUrl] = useState('');
@@ -19,13 +37,6 @@ const SongItem = ({ song, handleClick } : {
     }
   }, []);
 
-  const imgStyle = {
-    maxHeight: '100px',
-    maxWidth: '100px',
-    width: '100px',
-    minHeight: '100px',
-    border: 'solid gray 1px',
-  };
   return (
     <S.SongItem
       onClick={handleClick}
@@ -42,16 +53,23 @@ const SongItem = ({ song, handleClick } : {
       <div>
         <S.SongTitle>{song.title}</S.SongTitle>
         <S.SongArtist>{song.artist}</S.SongArtist>
+        <br />
+        {song.highlights && <SongLyricHighlight highlights={song.highlights} />}
       </div>
     </S.SongItem>
   );
 };
 
-const SongList = ({ songs, setCurrentSong }: {
-  songs: Song[],
-  setCurrentSong: (song:Song) => void
-}) => {
-  const placeholders = [];
+const SongList = () => {
+  const [songsState, dispatch] = useContext(SongsContext);
+  const { songs } = songsState;
+  const setCurrentSong = (song:SongWithLyricsHighlight) => {
+    dispatch({
+      type: 'SET_CURRENT_SONG',
+      data: song.id,
+    });
+  };
+
   if (songs.length === 0) { return (<div>No songs found</div>); }
 
   return (

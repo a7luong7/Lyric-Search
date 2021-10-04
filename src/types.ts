@@ -1,3 +1,56 @@
+export interface SongsState {
+  songs: SongWithLyricsHighlight[],
+  currentSong: SongWithLyricsHighlight | null,
+  query: string,
+  nextPage: number | null,
+  isLoading: boolean,
+  isError: boolean
+}
+
+interface SetQuery {
+  type: 'SET_QUERY',
+  data: string
+}
+
+interface SetSongsAction {
+  type: 'SET_SONGS',
+  data: {
+    songs: SongWithLyricsHighlight[],
+    query: string,
+    nextPage: number | null
+  }
+}
+
+interface SetCurrentSongAction {
+  type: 'SET_CURRENT_SONG',
+  data: number
+}
+
+interface AppendSongsAction {
+  type: 'APPEND_SONGS',
+  data: {
+    songs: SongWithLyricsHighlight[],
+    nextPage: number | null
+  }
+}
+
+interface SetLoading {
+  type: 'SET_LOADING',
+}
+
+interface SetError {
+  type: 'SET_ERROR',
+  data: string
+}
+
+export type SongsAction =
+    | AppendSongsAction
+    | SetSongsAction
+    | SetCurrentSongAction
+    | SetLoading
+    | SetError
+    | SetQuery;
+
 export interface Song {
   id: number,
   api_path: string,

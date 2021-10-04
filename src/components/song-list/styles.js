@@ -5,9 +5,10 @@ export const SongItem = styled.div`
     border-radius:0.25rem;
     padding:0.5rem;
     margin-bottom:0.25rem;
+    background-color: #ddd;
 
     &:hover {
-    background-color: rgba(0,0,0,0.05)
+    /*background-color: rgba(0,0,0,0.05)*/
     }
 `;
 
@@ -27,7 +28,7 @@ export const SongItemImgWrapper = styled.div`
 `;
 
 export const SongTitle = styled.div`
-    font-size:1.15em;
+    font-size:1.1em;
     font-weight:500
 `;
 export const SongArtist = styled.div`

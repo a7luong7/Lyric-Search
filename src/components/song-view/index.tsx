@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable linebreak-style */
 import React, { useEffect, useState } from 'react';
-import { Song } from '../../types';
+import { Song, SongWithLyricsHighlight } from '../../types';
 import { searchLyrics } from '../../external-api';
 import * as S from './styles';
 
