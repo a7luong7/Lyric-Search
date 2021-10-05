@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable linebreak-style */
 import React, { useEffect, useState, useContext } from 'react';
+import { searchSongs } from '../../external-api';
 import { Song, SongWithLyricsHighlight, LyricsHighlight } from '../../types';
 import * as S from './styles';
 import SongsContext from '../../contexts';
@@ -60,6 +61,36 @@ const SongItem = ({ song, handleClick } : {
   );
 };
 
+const LoadMoreButton = () => {
+  const [songsState, dispatch] = useContext(SongsContext);
+  if (!songsState.query || !songsState.nextPage) {
+    return null;
+  }
+
+  const handleClick = async (e: React.SyntheticEvent) => {
+    dispatch({ type: 'SET_LOADING' });
+    const lyricsSearchRes = await searchSongs(songsState.query, songsState.nextPage || 1);
+    // setSongResults(lyricsSearchRes.songs || []);
+    dispatch({
+      type: 'APPEND_SONGS',
+      data: {
+        songs: lyricsSearchRes.songs,
+        nextPage: lyricsSearchRes.nextPage,
+      },
+    });
+  };
+
+  return (
+    <button
+      type="button"
+      disabled={songsState.isLoading}
+      onClick={handleClick}
+    >
+      Load more songs
+    </button>
+  );
+};
+
 const SongList = () => {
   const [songsState, dispatch] = useContext(SongsContext);
   const { songs } = songsState;
@@ -81,6 +112,7 @@ const SongList = () => {
           handleClick={() => setCurrentSong(song)}
         />
       ))}
+      <LoadMoreButton />
     </div>
   );
 };

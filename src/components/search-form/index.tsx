@@ -16,8 +16,9 @@ const SearchForm = ({ searchTerm, setSearchTerm, setSongResults } : {
     e.preventDefault();
     if (!searchTerm) { return; }
 
+    dispatch({ type: 'SET_LOADING' });
     const query = searchTerm;
-    const lyricsSearchRes = await searchSongs(searchTerm);
+    const lyricsSearchRes = await searchSongs(searchTerm, 1);
     // setSongResults(lyricsSearchRes.songs || []);
     dispatch({
       type: 'SET_SONGS',
@@ -37,7 +38,7 @@ const SearchForm = ({ searchTerm, setSearchTerm, setSongResults } : {
         onChange={(e) => setSearchTerm(e.target.value)}
       />
       <button
-        disabled={!searchTerm}
+        disabled={!searchTerm || songsState.isLoading}
         type="submit"
       >
         Search

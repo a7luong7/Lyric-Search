@@ -3,9 +3,8 @@ import { Song, SongSearchResponse, LyricsRes } from './types';
 
 const baseUrl = 'http://localhost:3001/api';
 
-export const searchSongs = async (lyrics: string) : Promise<SongSearchResponse> => {
-  const page = 1;
-  const url = `${baseUrl}/search?lyrics=${encodeURI(lyrics)}`;
+export const searchSongs = async (lyrics: string, page: number) : Promise<SongSearchResponse> => {
+  const url = `${baseUrl}/search?lyrics=${encodeURI(lyrics)}&page=${page}`;
   const result = await axios.get(url);
   await new Promise((resolve) => setTimeout(resolve, 1000));
   return result.data;
