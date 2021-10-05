@@ -5,10 +5,9 @@ import { Song } from '../../types';
 import { searchSongs } from '../../external-api';
 import SongsContext from '../../contexts';
 
-const SearchForm = ({ searchTerm, setSearchTerm, setSongResults } : {
+const SearchForm = ({ searchTerm, setSearchTerm } : {
   searchTerm: string,
   setSearchTerm: (st:string) => void,
-  setSongResults: (songs:Song[]) => void
 }) => {
   const [songsState, dispatch] = useContext(SongsContext);
 
@@ -19,7 +18,7 @@ const SearchForm = ({ searchTerm, setSearchTerm, setSongResults } : {
     dispatch({ type: 'SET_LOADING' });
     const query = searchTerm;
     const lyricsSearchRes = await searchSongs(searchTerm, 1);
-    // setSongResults(lyricsSearchRes.songs || []);
+
     dispatch({
       type: 'SET_SONGS',
       data: {

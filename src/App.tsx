@@ -14,10 +14,7 @@ const flexItemStyle = {
 
 const App = () => {
   const [songState, dispatch] = useReducer(reducer, initialState);
-
   const [searchTerm, setSearchTerm] = useState('');
-  const [songResults, setSongResults] = useState<Song[]>([]);
-  const [currentSong, setCurrentSong] = useState<Song | null>(null);
 
   return (
     <SongsContext.Provider value={[songState, dispatch]}>
@@ -26,11 +23,10 @@ const App = () => {
           <SearchForm
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
-            setSongResults={setSongResults}
           />
           <SongList />
         </div>
-        {currentSong && <SongView song={currentSong} searchTerm={searchTerm} />}
+        {songState.currentSong && <SongView song={songState.currentSong} searchTerm={searchTerm} />}
       </div>
     </SongsContext.Provider>
   );
