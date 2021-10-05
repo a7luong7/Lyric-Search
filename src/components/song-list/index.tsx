@@ -68,7 +68,7 @@ const SongItem = ({ song, handleClick } : {
 
 const LoadMoreButton = () => {
   const [songsState, dispatch] = useContext(SongsContext);
-  if (!songsState.query || !songsState.nextPage) {
+  if (!songsState.query || !songsState.nextPage || songsState.isLoading) {
     return null;
   }
 
@@ -98,7 +98,7 @@ const LoadMoreButton = () => {
 
 const SongList = () => {
   const [songsState, dispatch] = useContext(SongsContext);
-  const { songs } = songsState;
+  const { songs, query, isLoading } = songsState;
   const setCurrentSong = (song:SongWithLyricsHighlight) => {
     dispatch({
       type: 'SET_CURRENT_SONG',
@@ -106,7 +106,7 @@ const SongList = () => {
     });
   };
 
-  if (songs.length === 0) { return (<div>No songs found</div>); }
+  if (songs.length === 0 && query && !isLoading) { return (<div>No songs found</div>); }
 
   return (
     <div>
@@ -117,6 +117,7 @@ const SongList = () => {
           handleClick={() => setCurrentSong(song)}
         />
       ))}
+      {isLoading && <div>Loading songs...</div>}
       <LoadMoreButton />
     </div>
   );
