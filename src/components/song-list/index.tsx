@@ -11,10 +11,15 @@ const SongLyricHighlight = ({ highlights } : { highlights: LyricsHighlight[] }) 
   if (!highlight) { return null; }
 
   let highlightsStr = highlight.value;
-  highlight.ranges.reverse().forEach((range) => {
-    highlightsStr = `${highlightsStr.slice(0, range.end)}</b>${highlightsStr.slice(range.end)}`;
-    highlightsStr = `${highlightsStr.slice(0, range.start)}<b>${highlightsStr.slice(range.start)}`;
-  });
+  highlight
+    .ranges
+    .slice()
+    .reverse()
+    .forEach((range) => {
+      highlightsStr = `${highlightsStr.slice(0, range.end)}</b>${highlightsStr.slice(range.end)}`;
+      highlightsStr = `${highlightsStr.slice(0, range.start)}<b>${highlightsStr.slice(range.start)}`;
+    });
+
   return (
     // eslint-disable-next-line react/no-danger
     <div dangerouslySetInnerHTML={{
