@@ -4,8 +4,9 @@
 /* eslint-disable linebreak-style */
 import React, { useEffect, useState } from 'react';
 import { Song, SongWithLyricsHighlight } from '../../types';
-import { searchLyrics } from '../../external-api';
+import { searchLyrics, searchYoutubeVideos } from '../../external-api';
 import * as S from './styles';
+import './styles.css';
 
 const SongInfo = ({ song } : { song:Song }) => {
   const imgStyle = {
@@ -37,31 +38,30 @@ const Lyrics = ({ lyrics, searchTerm } : {
   searchTerm: string
 }) => {
   if (!lyrics) { return (<div>No lyrics found</div>); }
-
-  //   const regex = new RegExp(searchTerm, 'gi');
-  //   return (
-  //     <div>
-  //       {lyrics.split('<br>').map((lyric, i) => (
-  //         <span key={i}>
-  //           {lyric.split(regex).map((partial, j) => (
-  //             <span key={`${i}-${j}`}>
-  //               <span>{partial}</span>
-  //               {' '}
-  //               <span style={{ backgroundColor: '#FFFF00' }}>{searchTerm}</span>
-  //             </span>
-  //           ))}
-  //           <br />
-  //         </span>
-  //       ))}
-  //     </div>
-  //   );
-
   return (
     // eslint-disable-next-line react/no-danger
     <div dangerouslySetInnerHTML={{
       __html: lyrics,
     }}
     />
+  );
+};
+
+const Video = ({ videoUrl } : { videoUrl: string }) => {
+  if (!videoUrl) { return null; }
+
+  return (
+    <div className="video-container">
+      <iframe
+        width="1440"
+        height="762"
+        src={`https://www.youtube-nocookie.com/embed/${videoUrl}`}
+        title="Embedded YT video"
+        frameBorder="0"
+        allow="autoplay; encrypted-media"
+        allowFullScreen
+      />
+    </div>
   );
 };
 
@@ -87,11 +87,16 @@ const SongView = ({ song, searchTerm } : {
   searchTerm: string
 }) => {
   const [lyrics, setLyrics] = useState<string>('');
+  const [videoUrl, setVideoUrl] = useState<string>('');
 
   useEffect(() => {
     async function getLyrics() {
       const lyricsRes = await searchLyrics(song.path);
       setLyrics(highlightLyrics(lyricsRes.lyrics, searchTerm));
+      const videoRes = await searchYoutubeVideos(`${song.title} ${song.artist}`);
+      if (videoRes.length > 0) {
+        setVideoUrl(videoRes[0].videoID);
+      }
     }
     getLyrics();
   }, [song]);
@@ -99,6 +104,7 @@ const SongView = ({ song, searchTerm } : {
   return (
     <div style={{ width: '50%' }}>
       <SongInfo song={song} />
+      <Video videoUrl={videoUrl} />
       <Lyrics lyrics={lyrics} searchTerm={searchTerm} />
     </div>
   );

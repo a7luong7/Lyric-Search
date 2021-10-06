@@ -89,3 +89,16 @@ export interface SongSearchResponse {
 export interface LyricsRes {
   lyrics: string
 }
+
+export interface YoutubeSearchResult {
+  videoID: string,
+  channelID: string,
+  title: string,
+  description: string,
+  publishedAt: string,
+  thumbnails: {
+    default: string,
+    medium: string,
+    high: string
+  }
+}
