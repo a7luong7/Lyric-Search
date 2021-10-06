@@ -23,6 +23,7 @@ const SongLyricHighlight = ({ highlights } : { highlights: LyricsHighlight[] }) 
       highlightsStr = `${highlightsStr.slice(0, range.end)}</b>${highlightsStr.slice(range.end)}`;
       highlightsStr = `${highlightsStr.slice(0, range.start)}<b>${highlightsStr.slice(range.start)}`;
     });
+  highlightsStr = `<span style='color:#6c757d'>${highlightsStr}</span>`;
 
   return (
     // eslint-disable-next-line react/no-danger

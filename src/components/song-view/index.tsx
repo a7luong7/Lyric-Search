@@ -7,13 +7,15 @@ import { Song, SongWithLyricsHighlight } from '../../types';
 import { searchLyrics, searchYoutubeVideos } from '../../external-api';
 import * as S from './styles';
 import './styles.css';
+import {
+  BrowserRouter as Router,
+  Switch, Route, Link,
+} from 'react-router-dom';
 
 const SongInfo = ({ song } : { song:Song }) => {
   const imgStyle = {
     maxHeight: '300px',
     maxWidth: '300px',
-    width: '300px',
-    minHeight: '300px',
     border: 'solid gray 1px',
   };
   return (
@@ -24,11 +26,15 @@ const SongInfo = ({ song } : { song:Song }) => {
         {' '}
         {song.artist}
       </h4>
-      <img
-        style={imgStyle}
-        alt="Song cover art"
-        src={song.song_art_image_thumbnail_url || song.header_image_thumbnail_url}
-      />
+      <Link to="/">back to search</Link>
+      <div>
+        <img
+          style={imgStyle}
+          alt="Song cover art"
+          src={song.song_art_image_thumbnail_url || song.header_image_thumbnail_url}
+        />
+      </div>
+
     </div>
   );
 };
@@ -68,9 +74,11 @@ const Lyrics = ({ path, searchTerm } : {
   if (!lyrics) { return (<div>No lyrics found</div>); }
   return (
     // eslint-disable-next-line react/no-danger
-    <div dangerouslySetInnerHTML={{
-      __html: lyrics,
-    }}
+    <div
+      style={{ textAlign: 'left', margin: 'auto', maxWidth: '500px' }}
+      dangerouslySetInnerHTML={{
+        __html: lyrics,
+      }}
     />
   );
 };
@@ -128,7 +136,7 @@ const SongView = ({ song, searchTerm } : {
   searchTerm: string
 }) => {
   return (
-    <div style={{ width: '50%' }}>
+    <div style={{ textAlign: 'center' }}>
       <SongInfo song={song} />
       <Video song={song} />
       {song.path && <Lyrics path={song.path} searchTerm={searchTerm} />}

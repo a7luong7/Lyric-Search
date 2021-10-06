@@ -6,7 +6,7 @@
     overflow: hidden; 
     max-width: 500px;
     max-height: 300px;
-    /* margin: auto; */
+    margin: auto; 
 }
 
 .video-container iframe, .video-container object, .video-container embed { 

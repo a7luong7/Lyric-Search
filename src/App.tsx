@@ -41,9 +41,14 @@ const App = () => {
   const [songState, dispatch] = useReducer(reducer, initialState);
   const [searchTerm, setSearchTerm] = useState('');
 
+  const style = {
+    maxWidth: '900px',
+    margin: 'auto',
+  };
+
   return (
     <SongsContext.Provider value={[songState, dispatch]}>
-      <div className="App">
+      <div className="App" style={style}>
         {songState.error && <Error errorMessage={songState.error} />}
 
         <Router>
