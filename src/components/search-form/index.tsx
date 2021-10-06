@@ -17,16 +17,23 @@ const SearchForm = ({ searchTerm, setSearchTerm } : {
 
     dispatch({ type: 'SET_LOADING' });
     const query = searchTerm;
-    const lyricsSearchRes = await searchSongs(searchTerm, 1);
 
-    dispatch({
-      type: 'SET_SONGS',
-      data: {
-        songs: lyricsSearchRes.songs,
-        query,
-        nextPage: lyricsSearchRes.nextPage,
-      },
-    });
+    try {
+      const lyricsSearchRes = await searchSongs(searchTerm, 1);
+      dispatch({
+        type: 'SET_SONGS',
+        data: {
+          songs: lyricsSearchRes.songs,
+          query,
+          nextPage: lyricsSearchRes.nextPage,
+        },
+      });
+    } catch (ex:any) {
+      dispatch({
+        type: 'SET_ERROR',
+        data: ex.message as string,
+      });
+    }
   };
 
   return (

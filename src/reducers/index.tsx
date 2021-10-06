@@ -6,7 +6,7 @@ const initialState : SongsState = {
   query: '',
   nextPage: 1,
   isLoading: false,
-  isError: false,
+  error: null,
 };
 
 const reducer = (state:SongsState, action:SongsAction) : SongsState => {
@@ -19,7 +19,7 @@ const reducer = (state:SongsState, action:SongsAction) : SongsState => {
         songs: state.songs.concat(action.data.songs),
         nextPage: action.data.nextPage,
         isLoading: false,
-        isError: false,
+        error: null,
       };
     case 'SET_SONGS':
       return {
@@ -28,7 +28,7 @@ const reducer = (state:SongsState, action:SongsAction) : SongsState => {
         query: action.data.query,
         nextPage: action.data.nextPage,
         isLoading: false,
-        isError: false,
+        error: null,
       };
     case 'SET_CURRENT_SONG':
       return {
@@ -36,9 +36,9 @@ const reducer = (state:SongsState, action:SongsAction) : SongsState => {
         currentSong: state.songs.find((x) => x.id === action.data) || null,
       };
     case 'SET_LOADING':
-      return { ...state, isLoading: true, isError: false };
+      return { ...state, isLoading: true, error: null };
     case 'SET_ERROR':
-      return { ...state, isLoading: false, isError: true };
+      return { ...state, isLoading: false, error: action.data };
     default:
       return state;
   }

@@ -33,38 +33,6 @@ const SongInfo = ({ song } : { song:Song }) => {
   );
 };
 
-const Lyrics = ({ lyrics, searchTerm } : {
-  lyrics: string,
-  searchTerm: string
-}) => {
-  if (!lyrics) { return (<div>No lyrics found</div>); }
-  return (
-    // eslint-disable-next-line react/no-danger
-    <div dangerouslySetInnerHTML={{
-      __html: lyrics,
-    }}
-    />
-  );
-};
-
-const Video = ({ videoUrl } : { videoUrl: string }) => {
-  if (!videoUrl) { return null; }
-
-  return (
-    <div className="video-container">
-      <iframe
-        width="1440"
-        height="762"
-        src={`https://www.youtube-nocookie.com/embed/${videoUrl}`}
-        title="Embedded YT video"
-        frameBorder="0"
-        allow="autoplay; encrypted-media"
-        allowFullScreen
-      />
-    </div>
-  );
-};
-
 const highlightLyrics = (lyrics:string, searchTerm:string) : string => {
   if (!lyrics || !searchTerm) { return lyrics; }
   let newLyrics = lyrics;
@@ -82,30 +50,88 @@ const highlightLyrics = (lyrics:string, searchTerm:string) : string => {
   return newLyrics;
 };
 
-const SongView = ({ song, searchTerm } : {
-  song : Song,
+const Lyrics = ({ path, searchTerm } : {
+  path: string,
   searchTerm: string
 }) => {
+  if (!path) return null;
+
   const [lyrics, setLyrics] = useState<string>('');
+  useEffect(() => {
+    async function getLyrics() {
+      const lyricsRes = await searchLyrics(path);
+      setLyrics(highlightLyrics(lyricsRes.lyrics, searchTerm));
+    }
+    getLyrics();
+  }, [path]);
+
+  if (!lyrics) { return (<div>No lyrics found</div>); }
+  return (
+    // eslint-disable-next-line react/no-danger
+    <div dangerouslySetInnerHTML={{
+      __html: lyrics,
+    }}
+    />
+  );
+};
+
+const Video = ({ song } : { song: SongWithLyricsHighlight }) => {
+  if (!song) {
+    return null;
+  }
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [videoUrl, setVideoUrl] = useState<string>('');
 
   useEffect(() => {
-    async function getLyrics() {
-      const lyricsRes = await searchLyrics(song.path);
-      setLyrics(highlightLyrics(lyricsRes.lyrics, searchTerm));
+    setIsOpen(false);
+    async function getVideoUrl() {
       const videoRes = await searchYoutubeVideos(`${song.title} ${song.artist}`);
       if (videoRes.length > 0) {
         setVideoUrl(videoRes[0].videoID);
       }
     }
-    getLyrics();
+    getVideoUrl();
   }, [song]);
 
+  if (isOpen) {
+    return (
+      <div>
+        <div className="video-container">
+          <iframe
+            width="500"
+            height="300"
+            src={`https://www.youtube-nocookie.com/embed/${videoUrl}?autoplay=0`}
+            title="Embedded YT video"
+            frameBorder="0"
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (videoUrl) {
+    return (
+      <div>
+        <button type="button" onClick={() => setIsOpen(true)}>Play Youtube video</button>
+      </div>
+    );
+  }
+
+  return null;
+};
+
+const SongView = ({ song, searchTerm } : {
+  song : Song,
+  searchTerm: string
+}) => {
   return (
     <div style={{ width: '50%' }}>
       <SongInfo song={song} />
-      <Video videoUrl={videoUrl} />
-      <Lyrics lyrics={lyrics} searchTerm={searchTerm} />
+      <Video song={song} />
+      {song.path && <Lyrics path={song.path} searchTerm={searchTerm} />}
     </div>
   );
 };

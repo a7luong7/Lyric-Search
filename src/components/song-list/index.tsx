@@ -74,15 +74,22 @@ const LoadMoreButton = () => {
 
   const handleClick = async (e: React.SyntheticEvent) => {
     dispatch({ type: 'SET_LOADING' });
-    const lyricsSearchRes = await searchSongs(songsState.query, songsState.nextPage || 1);
-    // setSongResults(lyricsSearchRes.songs || []);
-    dispatch({
-      type: 'APPEND_SONGS',
-      data: {
-        songs: lyricsSearchRes.songs,
-        nextPage: lyricsSearchRes.nextPage,
-      },
-    });
+
+    try {
+      const lyricsSearchRes = await searchSongs(songsState.query, songsState.nextPage || 1);
+      dispatch({
+        type: 'APPEND_SONGS',
+        data: {
+          songs: lyricsSearchRes.songs,
+          nextPage: lyricsSearchRes.nextPage,
+        },
+      });
+    } catch (ex:any) {
+      dispatch({
+        type: 'SET_ERROR',
+        data: ex.message as string,
+      });
+    }
   };
 
   return (

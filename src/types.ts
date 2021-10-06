@@ -4,7 +4,7 @@ export interface SongsState {
   query: string,
   nextPage: number | null,
   isLoading: boolean,
-  isError: boolean
+  error: string | null
 }
 
 interface SetQuery {
