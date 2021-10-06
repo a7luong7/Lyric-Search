@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable linebreak-style */
 import React, { useEffect, useState, useContext } from 'react';
+import {
+  BrowserRouter as Router,
+  Switch, Route, Link, useHistory,
+} from 'react-router-dom';
 import { searchSongs } from '../../external-api';
 import { Song, SongWithLyricsHighlight, LyricsHighlight } from '../../types';
 import * as S from './styles';
@@ -106,11 +110,13 @@ const LoadMoreButton = () => {
 const SongList = () => {
   const [songsState, dispatch] = useContext(SongsContext);
   const { songs, query, isLoading } = songsState;
+  const history = useHistory();
   const setCurrentSong = (song:SongWithLyricsHighlight) => {
     dispatch({
       type: 'SET_CURRENT_SONG',
       data: song.id,
     });
+    history.push('/song');
   };
 
   if (songs.length === 0 && query && !isLoading) { return (<div>No songs found</div>); }

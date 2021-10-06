@@ -1,16 +1,12 @@
 /* eslint-disable linebreak-style */
 import React, { useState, useReducer } from 'react';
-import { Song } from './types';
+import {
+  BrowserRouter as Router,
+  Switch, Route, Link,
+} from 'react-router-dom';
 import { SearchForm, SongList, SongView } from './components';
 import SongsContext from './contexts';
 import { reducer, initialState } from './reducers';
-
-const style = {
-  display: 'flex',
-};
-const flexItemStyle = {
-  width: '50%',
-};
 
 const Error = ({ errorMessage } : { errorMessage:string }) => {
   if (!errorMessage) return null;
@@ -28,6 +24,19 @@ const Error = ({ errorMessage } : { errorMessage:string }) => {
   );
 };
 
+const SongSearch = ({ searchTerm, setSearchTerm } : {
+  searchTerm:string,
+  setSearchTerm:React.Dispatch<any>
+}) => (
+  <div>
+    <SearchForm
+      searchTerm={searchTerm}
+      setSearchTerm={setSearchTerm}
+    />
+    <SongList />
+  </div>
+);
+
 const App = () => {
   const [songState, dispatch] = useReducer(reducer, initialState);
   const [searchTerm, setSearchTerm] = useState('');
@@ -37,17 +46,18 @@ const App = () => {
       <div className="App">
         {songState.error && <Error errorMessage={songState.error} />}
 
-        <div style={style}>
-          <div style={flexItemStyle}>
-            <SearchForm
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-            />
-            <SongList />
-          </div>
-          {songState.currentSong
-            && <SongView song={songState.currentSong} searchTerm={searchTerm} />}
-        </div>
+        <Router>
+          <Switch>
+            <Route path="/song">
+              {songState.currentSong
+                ? <SongView song={songState.currentSong} searchTerm={searchTerm} />
+                : <SongSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> }
+            </Route>
+            <Route path="/">
+              <SongSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            </Route>
+          </Switch>
+        </Router>
 
       </div>
     </SongsContext.Provider>
