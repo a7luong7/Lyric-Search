@@ -34,6 +34,52 @@ const SongLyricHighlight = ({ highlights } : { highlights: LyricsHighlight[] }) 
   );
 };
 
+const SongTile = ({ song, handleClick } : {
+  song: SongWithLyricsHighlight,
+  handleClick: () =>void
+}) => {
+  const [imgUrl, setImgUrl] = useState('');
+
+  useEffect(() => {
+    if (song.song_art_image_thumbnail_url) {
+      setImgUrl(song.song_art_image_thumbnail_url);
+    } else if (song.header_image_thumbnail_url) {
+      setImgUrl(song.header_image_thumbnail_url);
+    }
+  }, []);
+
+  const style = {
+    maxWidth: '200px',
+    display: 'inline-block',
+    borderRadius: '0.25rem',
+    padding: '0.5rem',
+    marginBottom: '0.25rem',
+    backgroundColor: '#E5EAF5',
+  };
+
+  return (
+    <div
+      onClick={handleClick}
+      onKeyDown={handleClick}
+      role="menuitem"
+      tabIndex={0}
+      style={style}
+    >
+      <S.SongItemImgWrapper>
+        {imgUrl
+          ? <S.SongItemImg src={imgUrl} alt="Album art" />
+          : <div>Loading...</div>}
+      </S.SongItemImgWrapper>
+      <div>
+        <S.SongTitle>{song.title}</S.SongTitle>
+        <S.SongArtist>{song.artist}</S.SongArtist>
+        <br />
+        {song.highlights && <SongLyricHighlight highlights={song.highlights} />}
+      </div>
+    </div>
+  );
+};
+
 const SongItem = ({ song, handleClick } : {
   song: SongWithLyricsHighlight,
   handleClick: () =>void
@@ -110,8 +156,10 @@ const LoadMoreButton = () => {
 
 const SongList = () => {
   const [songsState, dispatch] = useContext(SongsContext);
-  const { songs, query, isLoading } = songsState;
+  const [view, setView] = useState<string>('tileView');
   const history = useHistory();
+
+  const { songs, query, isLoading } = songsState;
   const setCurrentSong = (song:SongWithLyricsHighlight) => {
     dispatch({
       type: 'SET_CURRENT_SONG',
@@ -124,14 +172,29 @@ const SongList = () => {
 
   return (
     <div>
-      {songs.map((song) => (
-        <SongItem
-          key={song.id}
-          song={song}
-          handleClick={() => setCurrentSong(song)}
-        />
-      ))}
-      {isLoading && <div>Loading songs...</div>}
+      <div>
+        <select onChange={(e) => setView(e.target.value)}>
+          <option value="tileView">Tile View</option>
+          <option value="listView">List View</option>
+        </select>
+      </div>
+      <div>
+        {view === 'tileView' && songs.map((song) => (
+          <SongTile
+            key={song.id}
+            song={song}
+            handleClick={() => setCurrentSong(song)}
+          />
+        ))}
+        {view === 'listView' && songs.map((song) => (
+          <SongItem
+            key={song.id}
+            song={song}
+            handleClick={() => setCurrentSong(song)}
+          />
+        ))}
+        {isLoading && <div>Loading songs...</div>}
+      </div>
       <LoadMoreButton />
     </div>
   );

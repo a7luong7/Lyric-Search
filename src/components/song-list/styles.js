@@ -5,7 +5,7 @@ export const SongItem = styled.div`
     border-radius:0.25rem;
     padding:0.5rem;
     margin-bottom:0.25rem;
-    background-color: #ddd;
+    background-color: #E5EAF5;
 
     &:hover {
     /*background-color: rgba(0,0,0,0.05)*/
