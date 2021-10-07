@@ -12,6 +12,8 @@ import * as Grid from '../../styles';
 import SongsContext from '../../contexts';
 import SelectGroupOption from '../select-group';
 import { Icon } from '../icon';
+import Button from '../button';
+import LoadingSpinner from '../loading-spinner';
 
 const SongLyricHighlight = ({ highlights } : { highlights: LyricsHighlight[] }) => {
   const highlight = highlights.find((x) => x.property === 'lyrics');
@@ -148,13 +150,14 @@ const LoadMoreButton = () => {
   };
 
   return (
-    <button
+    <Button
       type="button"
       disabled={songsState.isLoading}
       onClick={handleClick}
+      style={{ margin: '0 auto', marginTop: '.5em' }}
     >
-      Load more songs
-    </button>
+      Load More Results
+    </Button>
   );
 };
 
@@ -219,9 +222,12 @@ const SongList = () => {
           ))}
         </Grid.Row>
         )}
-        {isLoading && <div>Loading songs...</div>}
+        {isLoading && <LoadingSpinner text="Loading songs..." />}
       </div>
-      <LoadMoreButton />
+      <div style={{ textAlign: 'center' }}>
+        <LoadMoreButton />
+      </div>
+
     </div>
   );
 };

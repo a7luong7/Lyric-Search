@@ -2,7 +2,7 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable linebreak-style */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Song, SongWithLyricsHighlight } from '../../types';
 import { searchLyrics, searchYoutubeVideos } from '../../external-api';
 import * as S from './styles';
@@ -11,6 +11,9 @@ import {
   BrowserRouter as Router,
   Switch, Route, Link,
 } from 'react-router-dom';
+import LoadingSpinner from '../loading-spinner';
+import Button from '../button';
+import SongsContext from '../../contexts';
 
 const SongInfo = ({ song } : { song:Song }) => {
   const imgStyle = {
@@ -61,21 +64,28 @@ const Lyrics = ({ path, searchTerm } : {
   searchTerm: string
 }) => {
   if (!path) return null;
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [lyrics, setLyrics] = useState<string>('');
   useEffect(() => {
     async function getLyrics() {
-      const lyricsRes = await searchLyrics(path);
-      setLyrics(highlightLyrics(lyricsRes.lyrics, searchTerm));
+      setIsLoading(true);
+      try {
+        const lyricsRes = await searchLyrics(path);
+        setIsLoading(false);
+        setLyrics(highlightLyrics(lyricsRes.lyrics, searchTerm));
+      } catch (e) {
+        setIsLoading(false);
+      }
     }
     getLyrics();
   }, [path]);
 
+  if (isLoading) { return <LoadingSpinner text="Loading lyrics..." />; }
   if (!lyrics) { return (<div>No lyrics found</div>); }
   return (
-    // eslint-disable-next-line react/no-danger
     <div
       style={{ textAlign: 'left', margin: 'auto', maxWidth: '500px' }}
+      // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{
         __html: lyrics,
       }}
@@ -87,20 +97,35 @@ const Video = ({ song } : { song: SongWithLyricsHighlight }) => {
   if (!song) {
     return null;
   }
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [videoUrl, setVideoUrl] = useState<string>('');
+  const [songsState, dispatch] = useContext(SongsContext);
 
   useEffect(() => {
     setIsOpen(false);
+    setIsLoading(true);
     async function getVideoUrl() {
-      const videoRes = await searchYoutubeVideos(`${song.title} ${song.artist}`);
-      if (videoRes.length > 0) {
-        setVideoUrl(videoRes[0].videoID);
+      try {
+        const videoRes = await searchYoutubeVideos(`${song.title} ${song.artist}`);
+        setIsLoading(false);
+        if (videoRes.length > 0) {
+          setVideoUrl(videoRes[0].videoID);
+        }
+      } catch (e) {
+        setIsLoading(false);
+        dispatch({
+          type: 'SET_ERROR',
+          data: 'Sorry, could not find song on Youtube',
+        });
       }
     }
     getVideoUrl();
   }, [song]);
+
+  if (isLoading) {
+    return <LoadingSpinner text="Loading Youtube link" />;
+  }
 
   if (isOpen) {
     return (
@@ -123,7 +148,7 @@ const Video = ({ song } : { song: SongWithLyricsHighlight }) => {
   if (videoUrl) {
     return (
       <div>
-        <button type="button" onClick={() => setIsOpen(true)}>Play Youtube video</button>
+        <Button type="button" onClick={() => setIsOpen(true)}>Play Youtube Video</Button>
       </div>
     );
   }
