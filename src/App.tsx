@@ -4,6 +4,8 @@ import {
   BrowserRouter as Router,
   Switch, Route, Link,
 } from 'react-router-dom';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faSearch, faLongArrowAltDown, faLongArrowAltUp, faList, faThLarge } from '@fortawesome/free-solid-svg-icons';
 import { SearchForm, SongList, SongView } from './components';
 import SongsContext from './contexts';
 import { reducer, initialState } from './reducers';
@@ -40,6 +42,12 @@ const SongSearch = ({ searchTerm, setSearchTerm } : {
 const App = () => {
   const [songState, dispatch] = useReducer(reducer, initialState);
   const [searchTerm, setSearchTerm] = useState('');
+
+  library.add(faSearch);
+  library.add(faLongArrowAltDown);
+  library.add(faLongArrowAltUp);
+  library.add(faList);
+  library.add(faThLarge);
 
   const style = {
     maxWidth: '900px',

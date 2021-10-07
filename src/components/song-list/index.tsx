@@ -10,6 +10,8 @@ import { Song, SongWithLyricsHighlight, LyricsHighlight } from '../../types';
 import * as S from './styles';
 import * as Grid from '../../styles';
 import SongsContext from '../../contexts';
+import SelectGroupOption from '../select-group';
+import { Icon } from '../icon';
 
 const SongLyricHighlight = ({ highlights } : { highlights: LyricsHighlight[] }) => {
   const highlight = highlights.find((x) => x.property === 'lyrics');
@@ -67,11 +69,11 @@ const SongTile = ({ song, handleClick } : {
       tabIndex={0}
       style={style}
     >
-      <S.SongItemImgWrapper>
+      <S.SongImgWrapper>
         {imgUrl
           ? <S.SongItemImg src={imgUrl} alt="Album art" />
           : <div>Loading...</div>}
-      </S.SongItemImgWrapper>
+      </S.SongImgWrapper>
       <div>
         <S.SongTitle>{song.title}</S.SongTitle>
         <S.SongArtist>{song.artist}</S.SongArtist>
@@ -156,9 +158,29 @@ const LoadMoreButton = () => {
   );
 };
 
+const ViewSelector = ({ value, setValue } : {
+  value: any,
+  setValue: (val:any) => void
+}) => {
+  const handleClick = (e:any) => {
+    setValue(e.target.closest('button').value);
+  };
+
+  return (
+    <div>
+      <SelectGroupOption value="tiles" selectedValue={value} handleClick={handleClick}>
+        <Icon icon="th-large" />
+      </SelectGroupOption>
+      <SelectGroupOption value="list" selectedValue={value} handleClick={handleClick}>
+        <Icon icon="list" />
+      </SelectGroupOption>
+    </div>
+  );
+};
+
 const SongList = () => {
   const [songsState, dispatch] = useContext(SongsContext);
-  const [view, setView] = useState<string>('tileView');
+  const [view, setView] = useState<string>('tiles');
   const history = useHistory();
 
   const { songs, query, isLoading } = songsState;
@@ -167,28 +189,25 @@ const SongList = () => {
       type: 'SET_CURRENT_SONG',
       data: song.id,
     });
-    // history.push('/song');
+    history.push('/song');
   };
 
   if (songs.length === 0 && query && !isLoading) { return (<div>No songs found</div>); }
 
   return (
     <div>
-      <div>
-        <select onChange={(e) => setView(e.target.value)}>
-          <option value="tileView">Tile View</option>
-          <option value="listView">List View</option>
-        </select>
+      <div style={{ display: 'flex', margin: '.25rem 0', justifyContent: 'flex-end' }}>
+        <ViewSelector value={view} setValue={setView} />
       </div>
       <div>
-        {view === 'listView' && songs.map((song) => (
+        {view === 'list' && songs.map((song) => (
           <SongItem
             key={song.id}
             song={song}
             handleClick={() => setCurrentSong(song)}
           />
         ))}
-        {view === 'tileView'
+        {view === 'tiles'
         && (
         <Grid.Row>
           { songs.map((song) => (

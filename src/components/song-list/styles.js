@@ -18,13 +18,24 @@ export const SongItemImg = styled.img`
     border: solid gray 0px;
 `;
 
+export const SongImgWrapper = styled.div`
+    max-height: 200px;
+    max-width: 200px;
+    border-radius:0.25rem;
+    border: solid #eee 1px;
+    overflow:hidden;
+    margin: auto
+`;
+
 export const SongItemImgWrapper = styled.div`
     max-height: 100px;
     max-width: 100px;
     border-radius:0.25rem;
     border: solid #eee 1px;
     overflow:hidden;
-    margin-right:0.25rem;
+    
+    margin:auto 0;
+    margin-right:0.5rem;
 `;
 
 export const SongTitle = styled.div`

@@ -9,12 +9,6 @@ const sizes = {
   xxl: '1400px',
 };
 
-const getCol = (col, xs) => {
-  if (!Number.isNaN(Number(col))) return col;
-  if (!Number.isNaN(Number(xs))) return xs;
-  return '12';
-};
-
 export const Row = styled.div`
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -22,11 +16,19 @@ export const Row = styled.div`
   grid-row-gap: 1em;
 `;
 
-export const Col = styled.div`
+interface ColProps {
+  xs?:number,
+  sm?:number,
+  md?:number,
+  lg?:number,
+  xl?:number,
+}
+
+export const Col = styled.div<ColProps>`
   grid-column: span ${(props) => props.xs || '12'};
 
   @media (min-width: ${sizes.sm}) {
-    grid-column: span ${(props) => getCol(props.sm, props.xs)}
+    ${(props) => (props.sm ? `grid-column: span ${props.sm}` : '')}
   }
 
   @media (min-width: ${sizes.md}) {
