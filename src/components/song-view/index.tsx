@@ -4,12 +4,12 @@
 /* eslint-disable linebreak-style */
 import React, { useEffect, useState, useContext } from 'react';
 import { Song, SongWithLyricsHighlight } from '../../types';
-import { searchLyrics, searchYoutubeVideos } from '../../external-api';
+import { getSong, searchLyrics, searchYoutubeVideos } from '../../external-api';
 import * as S from './styles';
 import './styles.css';
 import {
   BrowserRouter as Router,
-  Switch, Route, Link,
+  Switch, Route, Link, useParams, useHistory,
 } from 'react-router-dom';
 import LoadingSpinner from '../loading-spinner';
 import Button from '../button';
@@ -156,15 +156,56 @@ const Video = ({ song } : { song: SongWithLyricsHighlight }) => {
   return null;
 };
 
-const SongView = ({ song, searchTerm } : {
-  song : Song,
+const SongView = ({ searchTerm } : {
   searchTerm: string
 }) => {
+  const history = useHistory();
+  const [songsState, dispatch] = useContext(SongsContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentSong, setCurrentSong] = useState<Song | null>(null);
+
+  const { id } : any = useParams();
+  if (!id || Number.isNaN(Number(id))) {
+    history.push('/');
+    return null;
+  }
+
+  useEffect(() => {
+    const existingSong = songsState.songs.find((x) => x.id === Number(id));
+    if (existingSong) {
+      setCurrentSong(existingSong);
+      return;
+    }
+
+    setIsLoading(true);
+    async function loadSong() {
+      try {
+        const songRes = await getSong(id);
+        setIsLoading(false);
+        if (songRes) {
+          setCurrentSong(songRes);
+        }
+      } catch (e) {
+        history.push('/');
+      }
+    }
+
+    loadSong();
+  }, [id]);
+
+  if (isLoading) {
+    return <LoadingSpinner text="Attempting to load song" />;
+  }
+  if (!currentSong) {
+    // history.push('/');
+    return null;
+  }
+
   return (
     <div style={{ textAlign: 'center' }}>
-      <SongInfo song={song} />
-      <Video song={song} />
-      {song.path && <Lyrics path={song.path} searchTerm={searchTerm} />}
+      <SongInfo song={currentSong} />
+      <Video song={currentSong} />
+      {currentSong.path && <Lyrics path={currentSong.path} searchTerm={searchTerm} />}
     </div>
   );
 };

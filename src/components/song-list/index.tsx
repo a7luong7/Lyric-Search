@@ -192,7 +192,7 @@ const SongList = () => {
       type: 'SET_CURRENT_SONG',
       data: song.id,
     });
-    history.push('/song');
+    history.push(`/songs/${song.id}`);
   };
 
   if (songs.length === 0 && query && !isLoading) { return (<div>No songs found</div>); }

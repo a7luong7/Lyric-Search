@@ -64,10 +64,11 @@ const App = () => {
 
         <Router>
           <Switch>
-            <Route path="/song">
-              {songState.currentSong
+            <Route path="/songs/:id">
+              <SongView searchTerm={searchTerm} />
+              {/* {songState.currentSong
                 ? <SongView song={songState.currentSong} searchTerm={searchTerm} />
-                : <SongSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> }
+                : <SongSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> } */}
             </Route>
             <Route path="/">
               <SongSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />

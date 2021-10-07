@@ -1,7 +1,16 @@
 import axios from 'axios';
-import { YoutubeSearchResult, SongSearchResponse, LyricsRes } from './types';
+import {
+  YoutubeSearchResult, SongSearchResponse, LyricsRes, Song,
+} from './types';
 
 const baseUrl = 'http://localhost:3001/api';
+
+export const getSong = async (id:number) : Promise<Song> => {
+  const url = `${baseUrl}/songs/${id}`;
+  const result = await axios.get(url);
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+  return result.data;
+};
 
 export const searchSongs = async (lyrics: string, page: number) : Promise<SongSearchResponse> => {
   const url = `${baseUrl}/search?lyrics=${encodeURI(lyrics)}&page=${page}`;
