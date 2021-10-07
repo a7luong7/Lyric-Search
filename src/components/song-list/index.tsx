@@ -8,6 +8,7 @@ import {
 import { searchSongs } from '../../external-api';
 import { Song, SongWithLyricsHighlight, LyricsHighlight } from '../../types';
 import * as S from './styles';
+import * as Grid from '../../styles';
 import SongsContext from '../../contexts';
 
 const SongLyricHighlight = ({ highlights } : { highlights: LyricsHighlight[] }) => {
@@ -49,8 +50,6 @@ const SongTile = ({ song, handleClick } : {
   }, []);
 
   const style = {
-    maxWidth: '200px',
-    display: 'inline-block',
     borderRadius: '0.25rem',
     padding: '0.5rem',
     marginBottom: '0.25rem',
@@ -58,7 +57,10 @@ const SongTile = ({ song, handleClick } : {
   };
 
   return (
-    <div
+    <Grid.Col
+      xs={12}
+      sm={6}
+      lg={3}
       onClick={handleClick}
       onKeyDown={handleClick}
       role="menuitem"
@@ -76,7 +78,7 @@ const SongTile = ({ song, handleClick } : {
         <br />
         {song.highlights && <SongLyricHighlight highlights={song.highlights} />}
       </div>
-    </div>
+    </Grid.Col>
   );
 };
 
@@ -165,7 +167,7 @@ const SongList = () => {
       type: 'SET_CURRENT_SONG',
       data: song.id,
     });
-    history.push('/song');
+    // history.push('/song');
   };
 
   if (songs.length === 0 && query && !isLoading) { return (<div>No songs found</div>); }
@@ -179,13 +181,6 @@ const SongList = () => {
         </select>
       </div>
       <div>
-        {view === 'tileView' && songs.map((song) => (
-          <SongTile
-            key={song.id}
-            song={song}
-            handleClick={() => setCurrentSong(song)}
-          />
-        ))}
         {view === 'listView' && songs.map((song) => (
           <SongItem
             key={song.id}
@@ -193,6 +188,18 @@ const SongList = () => {
             handleClick={() => setCurrentSong(song)}
           />
         ))}
+        {view === 'tileView'
+        && (
+        <Grid.Row>
+          { songs.map((song) => (
+            <SongTile
+              key={song.id}
+              song={song}
+              handleClick={() => setCurrentSong(song)}
+            />
+          ))}
+        </Grid.Row>
+        )}
         {isLoading && <div>Loading songs...</div>}
       </div>
       <LoadMoreButton />
