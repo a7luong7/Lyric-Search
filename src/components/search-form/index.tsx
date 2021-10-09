@@ -54,7 +54,7 @@ const SearchForm = ({ searchTerm, setSearchTerm } : {
       <S.Input
         type="text"
         value={searchTerm}
-        placeholder="Search by lyrics here"
+        placeholder="born in a crossfire hurricane"
         onChange={(e) => setSearchTerm(e.target.value)}
       />
 

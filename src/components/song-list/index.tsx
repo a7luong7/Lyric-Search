@@ -54,10 +54,7 @@ const SongTile = ({ song, handleClick } : {
   }, []);
 
   const style = {
-    borderRadius: '0.25rem',
-    padding: '0.5rem',
-    marginBottom: '0.25rem',
-    backgroundColor: '#E5EAF5',
+    marginBottom: '1rem',
   };
 
   return (
@@ -71,17 +68,20 @@ const SongTile = ({ song, handleClick } : {
       tabIndex={0}
       style={style}
     >
-      <S.SongImgWrapper>
-        {imgUrl
-          ? <S.SongItemImg src={imgUrl} alt="Album art" />
-          : <div>Loading...</div>}
-      </S.SongImgWrapper>
-      <div>
-        <S.SongTitle>{song.title}</S.SongTitle>
-        <S.SongArtist>{song.artist}</S.SongArtist>
-        <br />
-        {song.highlights && <SongLyricHighlight highlights={song.highlights} />}
-      </div>
+      <S.SongTile>
+        <S.SongImgWrapper>
+          {imgUrl
+            ? <S.SongItemImg src={imgUrl} alt="Album art" />
+            : <div>Loading...</div>}
+        </S.SongImgWrapper>
+        <div>
+          <S.SongTitle>{song.title}</S.SongTitle>
+          <S.SongArtist>{song.artist}</S.SongArtist>
+          <br />
+          {song.highlights && <SongLyricHighlight highlights={song.highlights} />}
+        </div>
+      </S.SongTile>
+
     </Grid.Col>
   );
 };
@@ -187,7 +187,7 @@ const SongControls = ({ songs, view, setView } : {
   setView: (s:string)=>void
 }) => (
   <div style={{ display: 'flex', margin: '.25rem 0' }}>
-    <div style={{ marginRight: 'auto' }}>
+    <div style={{ marginRight: 'auto', color: '#6c757d' }}>
       Showing
       {' '}
       {songs.length}

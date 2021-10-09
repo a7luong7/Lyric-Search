@@ -28,11 +28,22 @@ const Error = ({ errorMessage } : { errorMessage:string }) => {
   );
 };
 
+const Header = () => {
+  const style = {};
+  return (
+    <div>
+      <h2 style={{ marginBottom: '0' }}>Search Songs by Lyrics</h2>
+      <div style={{ color: '#6c757d' }}>Powered by Genius API</div>
+    </div>
+  );
+};
+
 const SongSearch = ({ searchTerm, setSearchTerm } : {
   searchTerm:string,
   setSearchTerm:React.Dispatch<any>
 }) => (
   <div>
+    <Header />
     <SearchForm
       searchTerm={searchTerm}
       setSearchTerm={setSearchTerm}
@@ -40,6 +51,17 @@ const SongSearch = ({ searchTerm, setSearchTerm } : {
     <SongList />
   </div>
 );
+
+const Footer = () => {
+  const style = {
+    width: '100%',
+  };
+  return (
+    <div style={style}>
+      <Link to="/">Home</Link>
+    </div>
+  );
+};
 
 const App = () => {
   const [songState, dispatch] = useReducer(reducer, initialState);
@@ -77,6 +99,7 @@ const App = () => {
               <SongSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             </Route>
           </Switch>
+          <Footer />
         </Router>
 
       </div>

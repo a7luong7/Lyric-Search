@@ -1,14 +1,27 @@
 import styled from 'styled-components';
 
+export const SongTile = styled.div`
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    /*margin-bottom: 0.25rem;*/
+    cursor: pointer;
+    background-color: #E5EAF5;
+    height: 100%;
+    &:hover {
+        -webkit-filter: brightness(105%);
+      }
+`;
+
 export const SongItem = styled.div`
     display:flex;
     border-radius:0.25rem;
     padding:0.5rem;
     margin-bottom:0.25rem;
     background-color: #E5EAF5;
+    cursor:pointer;
 
     &:hover {
-    /*background-color: rgba(0,0,0,0.05)*/
+      -webkit-filter: brightness(105%);
     }
 `;
 
