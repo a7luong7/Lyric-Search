@@ -212,6 +212,10 @@ const SongList = () => {
     history.push(`/songs/${song.id}`);
   };
 
+  useEffect(() => {
+    document.title = 'Search Songs by Lyrics';
+  }, []);
+
   if (songs.length === 0 && query && !isLoading) { return (<div>No songs found</div>); }
 
   return (

@@ -176,9 +176,11 @@ const SongView = ({ searchTerm } : {
   }
 
   useEffect(() => {
+    document.title = 'Loading song...';
     const existingSong = songsState.songs.find((x) => x.id === Number(id));
     if (existingSong) {
       setCurrentSong(existingSong);
+      document.title = `${existingSong.title} - ${existingSong.artist}`;
       return;
     }
 
@@ -189,6 +191,7 @@ const SongView = ({ searchTerm } : {
         setIsLoading(false);
         if (songRes) {
           setCurrentSong(songRes);
+          document.title = `${songRes.title} - ${songRes.artist}`;
         }
       } catch (e) {
         history.push('/');
