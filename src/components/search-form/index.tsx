@@ -4,6 +4,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Song } from '../../types';
 import { searchSongs } from '../../external-api';
 import SongsContext from '../../contexts';
+import { Icon } from '../icon';
+import * as S from './styles';
 
 const SearchForm = ({ searchTerm, setSearchTerm } : {
   searchTerm: string,
@@ -37,19 +39,21 @@ const SearchForm = ({ searchTerm, setSearchTerm } : {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <button
+    <S.Form onSubmit={handleSubmit}>
+      <S.Button
         disabled={!searchTerm || songsState.isLoading}
         type="submit"
       >
-        Search
-      </button>
-    </form>
+        <Icon icon="search" />
+      </S.Button>
+      <S.Input
+        type="text"
+        value={searchTerm}
+        placeholder="Search by lyrics here"
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+
+    </S.Form>
   );
 };
 
