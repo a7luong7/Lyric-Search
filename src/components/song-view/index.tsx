@@ -14,6 +14,7 @@ import {
 import LoadingSpinner from '../loading-spinner';
 import Button from '../button';
 import SongsContext from '../../contexts';
+import { Icon } from '../icon';
 
 const SongInfo = ({ song } : { song:Song }) => {
   const imgStyle = {
@@ -134,7 +135,7 @@ const Video = ({ song } : { song: SongWithLyricsHighlight }) => {
           <iframe
             width="500"
             height="300"
-            src={`https://www.youtube-nocookie.com/embed/${videoUrl}?autoplay=0`}
+            src={`https://www.youtube-nocookie.com/embed/${videoUrl}?autoplay=1`}
             title="Embedded YT video"
             frameBorder="0"
             allow="autoplay; encrypted-media"
@@ -148,7 +149,11 @@ const Video = ({ song } : { song: SongWithLyricsHighlight }) => {
   if (videoUrl) {
     return (
       <div>
-        <Button type="button" onClick={() => setIsOpen(true)}>Play Youtube Video</Button>
+        <Button type="button" onClick={() => setIsOpen(true)}>
+          <Icon icon="play" />
+          {' '}
+          Play Youtube Video
+        </Button>
       </div>
     );
   }

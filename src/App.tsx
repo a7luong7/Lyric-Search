@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
-  faSearch, faLongArrowAltDown, faLongArrowAltUp, faList, faThLarge,
+  faSearch, faLongArrowAltDown, faLongArrowAltUp, faList, faThLarge, faPlayCircle, faPlay, faMusic,
 } from '@fortawesome/free-solid-svg-icons';
 import { SearchForm, SongList, SongView } from './components';
 import SongsContext from './contexts';
@@ -50,6 +50,9 @@ const App = () => {
   library.add(faLongArrowAltUp);
   library.add(faList);
   library.add(faThLarge);
+  library.add(faPlayCircle);
+  library.add(faPlay);
+  library.add(faMusic);
 
   const style = {
     maxWidth: '900px',
