@@ -181,6 +181,23 @@ const ViewSelector = ({ value, setValue } : {
   );
 };
 
+const SongControls = ({ songs, view, setView } : {
+  songs:Song[],
+  view: string,
+  setView: (s:string)=>void
+}) => (
+  <div style={{ display: 'flex', margin: '.25rem 0' }}>
+    <div style={{ marginRight: 'auto' }}>
+      Showing
+      {' '}
+      {songs.length}
+      {' '}
+      results
+    </div>
+    <ViewSelector value={view} setValue={setView} />
+  </div>
+);
+
 const SongList = () => {
   const [songsState, dispatch] = useContext(SongsContext);
   const [view, setView] = useState<string>('tiles');
@@ -199,9 +216,7 @@ const SongList = () => {
 
   return (
     <div>
-      <div style={{ display: 'flex', margin: '.25rem 0', justifyContent: 'flex-end' }}>
-        <ViewSelector value={view} setValue={setView} />
-      </div>
+      {query && <SongControls songs={songs} view={view} setView={setView} /> }
       <div>
         {view === 'list' && songs.map((song) => (
           <SongItem

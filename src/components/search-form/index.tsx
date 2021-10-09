@@ -4,7 +4,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Song } from '../../types';
 import { searchSongs } from '../../external-api';
 import SongsContext from '../../contexts';
-import { Icon } from '../icon';
+import { Icon, IconWithLoad } from '../icon';
 import * as S from './styles';
 
 const SearchForm = ({ searchTerm, setSearchTerm } : {
@@ -12,12 +12,14 @@ const SearchForm = ({ searchTerm, setSearchTerm } : {
   setSearchTerm: (st:string) => void,
 }) => {
   const [songsState, dispatch] = useContext(SongsContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!searchTerm) { return; }
 
     dispatch({ type: 'SET_LOADING' });
+    setIsLoading(true);
     const query = searchTerm;
 
     try {
@@ -30,21 +32,24 @@ const SearchForm = ({ searchTerm, setSearchTerm } : {
           nextPage: lyricsSearchRes.nextPage,
         },
       });
+      setIsLoading(false);
     } catch (ex:any) {
       dispatch({
         type: 'SET_ERROR',
         data: ex.message as string,
       });
+      setIsLoading(false);
     }
   };
-
+  const isDisabled = !searchTerm || songsState.isLoading;
   return (
     <S.Form onSubmit={handleSubmit}>
       <S.Button
-        disabled={!searchTerm || songsState.isLoading}
+        disabled={isDisabled}
         type="submit"
       >
-        <Icon icon="search" />
+        <IconWithLoad icon="search" isLoading={isLoading} color={isDisabled ? '#ccc' : '#888'} />
+
       </S.Button>
       <S.Input
         type="text"
